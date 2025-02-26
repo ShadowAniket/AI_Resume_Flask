@@ -1,15 +1,13 @@
-import fitz  # PyMuPDF
 import nltk
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from pdfminer.high_level import extract_text
 
-nltk.download('punkt')
+# Ensure NLTK data is downloaded
+nltk.download('punkt', quiet=True)
 
 def extract_text_from_pdf(filepath):
-    doc = fitz.open(filepath)
-    text = ""
-    for page in doc:
-        text += page.get_text()
+    text = extract_text(filepath)
     return text
 
 def analyze_content(text):
