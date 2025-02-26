@@ -1,55 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Resume Checker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
-    <div class="max-w-4xl mx-auto py-12">
-        <h1 class="text-3xl font-bold text-center mb-6">Upload Your Resume for AI Analysis</h1>
-        
-        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-            <input type="file" id="resumeInput" class="hidden" accept=".pdf" />
-            <label for="resumeInput" class="cursor-pointer bg-blue-500 text-white px-6 py-3 rounded-lg text-lg">Choose File</label>
-            
-            <p id="fileName" class="mt-3 text-gray-600"></p>
-            <button onclick="uploadResume()" class="mt-4 bg-green-500 text-white px-6 py-2 rounded-lg">Analyze Resume</button>
-        </div>
+{% extends 'base.html' %}
 
-        <div id="analysisResult" class="mt-6 bg-white p-6 rounded-lg shadow-lg hidden">
-            <h2 class="text-2xl font-semibold mb-4">Resume Analysis</h2>
-            <pre id="resultText" class="text-gray-700"></pre>
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-xl font-bold mb-4">Upload Your Resume</h2>
+    <form action="{{ url_for('upload_resume') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="resume" class="block w-full border p-2 mb-4">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Check Resume</button>
+    </form>
+
+    {% if score %}
+    <div class="mt-6">
+        <h3 class="text-lg font-bold">Your Score: {{ score }}/100</h3>
+        <div class="bg-gray-200 progress-bar w-full mt-2">
+            <div class="bg-green-500" style="width: {{ score }}%;"></div>
+        </div>
+        <p class="mt-4 text-gray-700">Issues found: <strong>{{ issues_count }}</strong></p>
+
+        <div class="mt-4">
+            {% for issue in issues %}
+                <div class="bg-red-100 text-red-700 p-2 rounded mb-2">{{ issue }}</div>
+            {% endfor %}
         </div>
     </div>
-
-    <script>
-        document.getElementById('resumeInput').addEventListener('change', function(event) {
-            document.getElementById('fileName').textContent = event.target.files[0].name;
-        });
-        
-        function uploadResume() {
-            const fileInput = document.getElementById('resumeInput');
-            if (!fileInput.files.length) {
-                alert('Please select a file first.');
-                return;
-            }
-            
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-            
-            fetch('/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('analysisResult').classList.remove('hidden');
-                document.getElementById('resultText').textContent = JSON.stringify(data.analysis, null, 2);
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    </script>
-</body>
-</html>
+    {% endif %}
+</div>
+{% endblock %}

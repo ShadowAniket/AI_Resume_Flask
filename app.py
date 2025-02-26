@@ -1,52 +1,72 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 import os
-import pdfplumber  # For extracting text from PDFs
-import spacy  # For NLP processing
-from werkzeug.utils import secure_filename
 
 # Initialize Flask app
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads/'
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['UPLOAD_FOLDER'] = 'uploads'
 
-# Load NLP model
-nlp = spacy.load('en_core_web_sm')
+# Ensure the 'uploads' folder exists
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
-def extract_text_from_pdf(pdf_path):
-    """Extract text from a PDF resume."""
-    text = ""
-    with pdfplumber.open(pdf_path) as pdf:
-        for page in pdf.pages:
-            text += page.extract_text() + "\n"
-    return text.strip()
+# Initialize the database
+from models import db, User
 
-def analyze_resume(text):
-    """Analyze resume using NLP."""
-    doc = nlp(text)
-    skills = [ent.text for ent in doc.ents if ent.label_ == 'SKILL']  # Example skill extraction
-    return {"skills": skills, "word_count": len(doc)}
+db.init_app(app)
+
+# Setup Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'auth.login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+# Register Blueprints AFTER initializing db
+from auth import auth as auth_blueprint
+app.register_blueprint(auth_blueprint)
+
+def create_database():
+    """Create database tables if they don't exist."""
+    with app.app_context():
+        db.create_all()
+        print("✅ Database created successfully!")
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload_resume', methods=['POST'])
 def upload_resume():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file uploaded"})
-    
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"error": "No selected file"})
-    
-    filename = secure_filename(file.filename)
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    file.save(file_path)
-    
-    text = extract_text_from_pdf(file_path)
-    analysis = analyze_resume(text)
-    
-    return jsonify({"filename": filename, "analysis": analysis})
+    if 'resume' not in request.files:
+        flash("No file uploaded", "danger")
+        return redirect(url_for('home'))
 
+    file = request.files['resume']
+    if file.filename == '':
+        flash("No selected file", "danger")
+        return redirect(url_for('home'))
+
+    if file and file.filename.endswith('.pdf'):
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(filepath)
+        flash("Resume uploaded successfully!", "success")
+        
+        # Analyze the resume and get the score
+        from utils.score import analyze_resume
+        score, issues = analyze_resume(filepath)
+        
+        return render_template('index.html', score=score, issues=issues, issues_count=len(issues))
+    
+    flash("Invalid file format. Upload a PDF.", "danger")
+    return redirect(url_for('home'))
+
+# Run the app
 if __name__ == '__main__':
+    create_database()
     app.run(debug=True)
