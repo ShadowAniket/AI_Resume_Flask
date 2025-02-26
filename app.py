@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, login_required
 import os
 
 # Initialize Flask app
@@ -42,6 +42,7 @@ def home():
     return render_template('index.html')
 
 @app.route('/upload_resume', methods=['POST'])
+@login_required
 def upload_resume():
     if 'resume' not in request.files:
         flash("No file uploaded", "danger")

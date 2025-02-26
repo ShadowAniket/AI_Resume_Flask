@@ -11,8 +11,9 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.password.data, form.password.data):
+        if user and check_password_hash(user.password, form.password.data):
             login_user(user)
+            flash("Logged in successfully!", "success")
             return redirect(url_for('home'))
         flash("Invalid email or password", "danger")
     return render_template('auth/login.html', form=form)
@@ -25,7 +26,7 @@ def register():
         new_user = User(email=form.email.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        flash("Account created!", "success")
+        flash("Account created successfully!", "success")
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
@@ -33,4 +34,5 @@ def register():
 @login_required
 def logout():
     logout_user()
+    flash("Logged out successfully!", "success")
     return redirect(url_for('auth.login'))

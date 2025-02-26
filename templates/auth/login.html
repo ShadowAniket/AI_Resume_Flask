@@ -7,8 +7,14 @@
         {{ form.hidden_tag() }}
         <label>Email:</label>
         {{ form.email(class="block w-full border p-2 mb-2") }}
+        {% if form.email.errors %}
+            <p class="text-red-500">{{ form.email.errors[0] }}</p>
+        {% endif %}
         <label>Password:</label>
         {{ form.password(class="block w-full border p-2 mb-2") }}
+        {% if form.password.errors %}
+            <p class="text-red-500">{{ form.password.errors[0] }}</p>
+        {% endif %}
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
     </form>
 </div>
