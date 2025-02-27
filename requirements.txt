@@ -9,4 +9,4 @@ pdfminer.six==20231228
 spacy==3.2.1
 scikit-learn
 pandas
-nltk==3.6.3
+nltk==3.9.1
