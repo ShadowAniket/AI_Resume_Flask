@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required
+import nltk
+nltk.download('punkt_tab')
 import os
 
 # Initialize Flask app
