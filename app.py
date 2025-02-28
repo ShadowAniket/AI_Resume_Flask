@@ -4,6 +4,7 @@ from flask_login import LoginManager, login_required
 import nltk
 nltk.download('punkt_tab')
 import os
+import joblib
 
 # Initialize Flask app
 app = Flask(__name__)
