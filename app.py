@@ -42,7 +42,7 @@ def create_database():
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('homepage.html')
 
 @app.route('/upload_resume', methods=['POST'])
 @login_required
@@ -65,7 +65,7 @@ def upload_resume():
         from utils.score import analyze_resume
         score, issues = analyze_resume(filepath)
         
-        return render_template('index.html', score=score, issues=issues, issues_count=len(issues))
+        return render_template('homepage.html', score=score, issues=issues, issues_count=len(issues))
     
     flash("Invalid file format. Upload a PDF.", "danger")
     return redirect(url_for('home'))
