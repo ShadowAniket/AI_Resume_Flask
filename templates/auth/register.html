@@ -1,21 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-xl font-bold mb-4">Register</h2>
-    <form action="{{ url_for('auth.register') }}" method="POST">
-        {{ form.hidden_tag() }}
-        <label>Email:</label>
-        {{ form.email(class="block w-full border p-2 mb-2") }}
-        {% if form.email.errors %}
-            <p class="text-red-500">{{ form.email.errors[0] }}</p>
-        {% endif %}
-        <label>Password:</label>
-        {{ form.password(class="block w-full border p-2 mb-2") }}
-        {% if form.password.errors %}
-            <p class="text-red-500">{{ form.password.errors[0] }}</p>
-        {% endif %}
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded w-full">Register</button>
-    </form>
+<div class="flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full bg-white p-8 rounded-xl shadow-lg text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Register</h2>
+
+        <form action="{{ url_for('auth.register') }}" method="POST" class="text-left">
+            {{ form.hidden_tag() }}
+
+            <label class="block font-medium text-gray-700">Email:</label>
+            {{ form.email(class="block w-full p-3 border rounded-lg mb-2") }}
+            {% if form.email.errors %}
+                <p class="text-red-500 text-sm">{{ form.email.errors[0] }}</p>
+            {% endif %}
+
+            <label class="block font-medium text-gray-700 mt-3">Password:</label>
+            {{ form.password(class="block w-full p-3 border rounded-lg mb-2") }}
+            {% if form.password.errors %}
+                <p class="text-red-500 text-sm">{{ form.password.errors[0] }}</p>
+            {% endif %}
+
+            <button type="submit" class="w-full mt-4 bg-blue-500 text-white py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-blue-600">
+                Register
+            </button>
+        </form>
+
+        <p class="mt-4 text-gray-600">Already have an account? <a href="{{ url_for('auth.login') }}" class="text-blue-500 underline">Login</a></p>
+    </div>
 </div>
 {% endblock %}

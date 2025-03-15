@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero text-gray-800 py-24">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="text-content">
+            <h1 class="text-5xl font-bold leading-tight">Create a resume that gets you hired.</h1>
+            <p class="text-lg mt-4">Our AI-powered resume builder helps you create a professional and ATS-friendly resume in minutes.</p>
+            <a href="{{ url_for('auth.login') }}" class="bg-green-500 text-white px-6 py-3 rounded-lg mt-8 inline-block hover:bg-green-600">Upload Resume</a>
+        </div>
+        <div class="image-content">
+            <img src="https://enhancv.com/static/manifesto/img/hero-illustration.png" alt="Hero Illustration" class="w-full">
+        </div>
+    </div>
+</section>
+
+
+<!-- Added Content Section -->
+<section class="added-content bg-gray-50 py-20">
+    <div class="container mx-auto px-4"> 
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Land Your Dream Job</h2>
+        <p class="text-lg text-gray-700 mb-6">
+            In today's competitive job market, a standout resume is non-negotiable. 
+            Our AI-powered resume checker analyzes your resume for key criteria, 
+            ensuring it grabs the attention of recruiters and helps you stand out 
+            from the crowd.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="feature-card bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition duration-300 ease-in-out">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">ATS Compatibility</h3>
+                <p class="text-gray-600">
+                    We'll optimize your resume to pass through Applicant Tracking Systems (ATS), 
+                    increasing your chances of getting noticed.
+                </p>
+            </div>
+            <div class="feature-card bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition duration-300 ease-in-out">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Targeted Keywords</h3>
+                <p class="text-gray-600">
+                    Identify and integrate industry-specific keywords to make your 
+                    resume relevant to the jobs you're targeting.
+                </p>
+            </div>
+            <div class="feature-card bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition duration-300 ease-in-out">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Actionable Insights</h3>
+                <p class="text-gray-600">
+                    Receive personalized suggestions to improve your resume's content, 
+                    structure, and overall impact.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features bg-gray-100 py-20" id="upload">
+  <div class="container mx-auto text-center">
+    <h2 class="text-3xl font-bold mb-8">Key Features</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="feature">
+        <i class="fas fa-file-alt text-4xl text-green-500 mb-4"></i> 
+        <h3 class="text-xl font-semibold mb-2">Resume Analysis</h3>
+        <p class="text-gray-600">Get instant feedback on your resume's content, formatting, and keywords.</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-chart-line text-4xl text-green-500 mb-4"></i>
+        <h3 class="text-xl font-semibold mb-2">ATS Optimization</h3>
+        <p class="text-gray-600">Ensure your resume gets past applicant tracking systems and into the hands of recruiters.</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-lightbulb text-4xl text-green-500 mb-4"></i>
+        <h3 class="text-xl font-semibold mb-2">Personalized Suggestions</h3>
+        <p class="text-gray-600">Receive tailored advice to improve your resume's impact and effectiveness.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta bg-white text-gray-800 py-16">
+    <div class="container mx-auto text-center">
+        <h2 class="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+        <p class="text-lg mb-8">Upload your resume today and see the difference.</p>
+        <a href="{{ url_for('auth.register') }}" class="bg-green-500 text-white px-6 py-3 rounded-lg mt-8 inline-block hover:bg-green-600">Get Started?</a>
+
+    </div>
+</section>
+
+{% endblock %}

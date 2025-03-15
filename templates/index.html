@@ -1,32 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-xl font-bold mb-4">Upload Your Resume</h2>
-    {% if current_user.is_authenticated %}
-    <p class="text-green-500">Welcome, {{ current_user.email }}!</p>
-    <form action="{{ url_for('upload_resume') }}" method="POST" enctype="multipart/form-data">
-        <input type="file" name="resume" class="block w-full border p-2 mb-4">
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Check Resume</button>
-    </form>
-    {% else %}
-    <p class="text-red-500">Please <a href="{{ url_for('auth.login') }}" class="text-blue-500">login</a> to upload your resume.</p>
-    {% endif %}
+<div class="bg-gradient-to-br from-green-100 via-purple-100 to-blue-100 w-full pt-24 pb-10 flex flex-col items-center">
+    <div class="max-w-3xl bg-white p-8 rounded-xl shadow-lg text-center w-full">
 
-    {% if score %}
-    <div class="mt-6">
-        <h3 class="text-lg font-bold">Your Score: {{ score }}/100</h3>
-        <div class="bg-gray-200 progress-bar w-full mt-2">
-            <div class="bg-green-500" style="width: {{ score }}%;"></div>
-        </div>
-        <p class="mt-4 text-gray-700">Issues found: <strong>{{ issues_count }}</strong></p>
+        <h2 class="text-3xl font-bold text-gray-800">Is Your Resume Good Enough?</h2>
+        <p class="text-gray-500 mt-2">A free AI resume checker performing 16 crucial checks to enhance your resume.</p>
 
-        <div class="mt-4">
-            {% for issue in issues %}
-                <div class="bg-red-100 text-red-700 p-2 rounded mb-2">{{ issue }}</div>
-            {% endfor %}
+        {% if current_user.is_authenticated %}
+        <p class="text-green-600 mt-4 font-medium">Welcome, {{ current_user.email.split('@')[0] }}!</p>
+
+        <div class="mt-6 border-dashed border-5 border-gray-300 p-6 rounded-lg bg-gray-50">
+            <form action="{{ url_for('upload_resume') }}" method="POST" enctype="multipart/form-data">
+                <input type="file" name="resume" id="resume" class="w-full p-3 border rounded-lg cursor-pointer">
+                
+                <button type="submit" class="mt-4 w-full bg-green-500 text-white py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-green-600">
+                    Upload Your Resume
+                </button>
+            </form>
         </div>
+        {% else %}
+        <p class="text-red-500 mt-4">Please <a href="{{ url_for('auth.login') }}" class="text-blue-500 underline">login</a> to upload your resume.</p>
+        {% endif %}
+
+        {% if score %}
+        <div class="mt-8 p-6 bg-gray-100 rounded-lg">
+            <h3 class="text-xl font-semibold text-gray-700">Your Score: {{ score }}/100</h3>
+            <div class="relative w-full h-2 bg-gray-300 rounded-full mt-2">
+                <div class="absolute h-full bg-green-500 rounded-full" style="width: {{ score }}%;"></div>
+            </div>
+            <p class="mt-4 text-gray-600">Issues found: <strong>{{ issues_count }}</strong></p>
+            <ul class="mt-4 text-left">
+                {% for issue in issues %}
+                <li class="bg-red-100 text-red-700 p-2 rounded-md mb-2">⚠️ {{ issue }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 </div>
 {% endblock %}
